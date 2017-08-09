@@ -1,8 +1,10 @@
 package br.com.caelum.almocotecnico.retrofit
 
+import br.com.caelum.almocotecnico.model.Author
 import br.com.caelum.almocotecnico.retrofit.service.AuthorService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
@@ -16,7 +18,7 @@ class RetrofitInitializer {
 
     private val endPoint = "http://192.168.65.39:8080/"
 
-    val retrofit: Retrofit by lazy {
+    private val retrofit: Retrofit by lazy {
         val objectMapper = configureJackson()
         var client = configureOkHttpClient()
         Retrofit.Builder()
@@ -46,6 +48,7 @@ class RetrofitInitializer {
     private fun configureJackson(): ObjectMapper {
         var objectMapper = ObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        objectMapper.registerKotlinModule()
         return objectMapper
     }
 }

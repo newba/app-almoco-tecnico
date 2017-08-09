@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     private fun setupTabs() {
         var mainPagerAdapter = MainPagerAdapter(supportFragmentManager)
         main_viewpager.adapter = mainPagerAdapter
-
         main_sliding_tabs.setupWithViewPager(main_viewpager)
     }
 
