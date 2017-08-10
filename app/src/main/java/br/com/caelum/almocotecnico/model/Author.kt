@@ -5,4 +5,9 @@ package br.com.caelum.almocotecnico.model
  */
 data class Author(var id: Long = 0,
                   var name: String = "",
-                  var links: List<Link> = listOf())
+                  private var links: List<Link> = listOf()) {
+
+    fun self(): String {
+        return links.first().href
+    }
+}

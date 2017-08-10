@@ -2,6 +2,7 @@ package br.com.caelum.almocotecnico.retrofit
 
 import br.com.caelum.almocotecnico.model.Author
 import br.com.caelum.almocotecnico.retrofit.service.AuthorService
+import br.com.caelum.almocotecnico.retrofit.service.BookService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
@@ -30,6 +31,10 @@ class RetrofitInitializer {
 
     fun authorService(): AuthorService {
         return retrofit.create(AuthorService::class.java)
+    }
+
+    fun bookService(): BookService {
+        return retrofit.create(BookService::class.java)
     }
 
     private fun configureOkHttpClient(): OkHttpClient? {

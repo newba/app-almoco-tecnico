@@ -22,7 +22,7 @@ class BookListAdapter(
         val view = LayoutInflater.from(context).inflate(R.layout.book_item, viewGroup, false)
         val book = books.get(position)
         val bookContent = view.findViewById<TextView>(R.id.book_item_content)
-        bookContent.text = "${book.id} - ${book.title}"
+        bookContent.text = book.title
         return view
     }
 

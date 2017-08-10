@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
 import br.com.caelum.almocotecnico.R
+import br.com.caelum.almocotecnico.dao.AuthorDAO
 import br.com.caelum.almocotecnico.model.Author
 import br.com.caelum.almocotecnico.retrofit.RetrofitInitializer
 import br.com.caelum.almocotecnico.ui.adapter.AuthorListAdapter
@@ -55,7 +56,10 @@ class AuthorListFragment() : Fragment() {
 
                             override fun onResponse(call: Call<Author?>?, response: Response<Author?>?) {
                                 val author = response?.body()
-                                author?.let { updateList(listOf<Author>(author)) }
+                                author?.let {
+                                    AuthorDAO().add(author)
+                                    updateList(listOf<Author>(author))
+                                }
                             }
                         })
                     }).show()
@@ -77,7 +81,10 @@ class AuthorListFragment() : Fragment() {
 
             override fun onResponse(call: Call<List<Author>>?, response: Response<List<Author>>?) {
                 val authors = response?.body()
-                authors?.let { updateList(authors) }
+                authors?.let {
+                    AuthorDAO().add(authors)
+                    updateList(authors)
+                }
             }
         })
     }
