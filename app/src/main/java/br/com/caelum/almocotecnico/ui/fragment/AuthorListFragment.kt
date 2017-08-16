@@ -57,7 +57,7 @@ class AuthorListFragment : Fragment() {
 
     private fun configureInsertDialog(container: ViewGroup?) {
         container?.let {
-            AuthorDialog(context = context, viewGroup = container).show({
+            AuthorDialog(context = context, viewGroup = it).show({
                 val call = RetrofitInitializer().authorService().insert(it)
                 call.enqueue(RetrofitCallback().callback { response, throwable ->
                     val author = response?.body()
