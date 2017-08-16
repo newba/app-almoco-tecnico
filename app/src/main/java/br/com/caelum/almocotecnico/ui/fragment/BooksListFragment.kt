@@ -20,8 +20,8 @@ import br.com.caelum.almocotecnico.ui.dialog.BookDialog
  */
 class BooksListFragment : Fragment() {
 
-    val books = mutableListOf<Book>()
-    val adapter: BookListAdapter by lazy { BookListAdapter(context = context, books = books) }
+    private val books = mutableListOf<Book>()
+    private val adapter: BookListAdapter by lazy { BookListAdapter(context = context, books = books) }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_books_list, container, false)
@@ -29,20 +29,7 @@ class BooksListFragment : Fragment() {
 
         val fab = view?.findViewById<FloatingActionButton>(R.id.books_list_add)
         fab?.setOnClickListener {
-
-            container?.let {
-                BookDialog(context, it).show({
-                    val call = RetrofitInitializer().bookService().insert(it)
-                    call.enqueue(RetrofitCallback().callback({ response, throwable ->
-                        response?.let {
-                            val book = response?.body()
-                            book?.let { updateList(listOf(book)) }
-                        }
-                        throwable?.let { Log.i("fail", throwable.toString()) }
-                    }))
-                })
-            }
-
+            configureInsertDialog(container)
         }
 
         val listView = view?.findViewById<ListView>(R.id.books_list_listview)
@@ -61,6 +48,21 @@ class BooksListFragment : Fragment() {
             }
             throwable?.let { Log.e("fail", throwable?.message) }
         })
+    }
+
+    private fun configureInsertDialog(container: ViewGroup?) {
+        container?.let {
+            BookDialog(context, it).show({
+                val call = RetrofitInitializer().bookService().insert(it)
+                call.enqueue(RetrofitCallback().callback({ response, throwable ->
+                    response?.let {
+                        val book = response?.body()
+                        book?.let { updateList(listOf(book)) }
+                    }
+                    throwable?.let { Log.i("fail", throwable.toString()) }
+                }))
+            })
+        }
     }
 
     private fun updateList(book: List<Book>) {
