@@ -1,7 +1,6 @@
 package br.com.caelum.almocotecnico.ui.fragment
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ListView
-import android.widget.Toast
 import br.com.caelum.almocotecnico.R
 import br.com.caelum.almocotecnico.dao.AuthorDAO
 import br.com.caelum.almocotecnico.model.Author
