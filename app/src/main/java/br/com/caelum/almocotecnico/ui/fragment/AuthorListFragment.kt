@@ -14,16 +14,13 @@ import br.com.caelum.almocotecnico.R
 import br.com.caelum.almocotecnico.dao.AuthorDAO
 import br.com.caelum.almocotecnico.model.Author
 import br.com.caelum.almocotecnico.retrofit.RetrofitInitializer
+import br.com.caelum.almocotecnico.retrofit.callback.RetrofitCallback
 import br.com.caelum.almocotecnico.ui.adapter.AuthorListAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 /**
  * Created by alex on 08/08/17.
  */
-class AuthorListFragment() : Fragment() {
-
+class AuthorListFragment : Fragment() {
 
     val authors = mutableListOf<Author>()
 
@@ -31,10 +28,11 @@ class AuthorListFragment() : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val view = inflater?.inflate(R.layout.fragment_authors_list, container, false) ?: super.onCreateView(inflater, container, savedInstanceState)
+        val createdView = inflater?.inflate(R.layout.fragment_authors_list, container, false)
+                ?: super.onCreateView(inflater, container, savedInstanceState)
 
-        val listView = view?.findViewById<ListView>(R.id.authors_list_listview)
-        val fab = view?.findViewById<FloatingActionButton>(R.id.authors_list_add)
+        val listView = createdView?.findViewById<ListView>(R.id.authors_list_listview)
+        val fab = createdView?.findViewById<FloatingActionButton>(R.id.authors_list_add)
 
         fab?.setOnClickListener {
 
@@ -44,20 +42,16 @@ class AuthorListFragment() : Fragment() {
             AlertDialog.Builder(context)
                     .setTitle("Add Author")
                     .setView(createdView)
-                    .setPositiveButton("Save", { dialogInterface, i ->
+                    .setPositiveButton("Save", { _, _ ->
                         val author = Author(name = fieldName.text.toString())
                         val call = RetrofitInitializer().authorService().insert(author)
-                        call.enqueue(object : Callback<Author?> {
-                            override fun onFailure(call: Call<Author?>?, t: Throwable?) {
-                                Log.e("fail", t?.message)
+                        call.enqueue(RetrofitCallback().callback { response, throwable ->
+                            response?.let {
+                                AuthorDAO().add(author)
+                                updateList(listOf(author))
                             }
-
-                            override fun onResponse(call: Call<Author?>?, response: Response<Author?>?) {
-                                val author = response?.body()
-                                author?.let {
-                                    AuthorDAO().add(author)
-                                    updateList(listOf<Author>(author))
-                                }
+                            throwable?.let {
+                                Log.e("fail", throwable.message)
                             }
                         })
                     }).show()
@@ -65,26 +59,23 @@ class AuthorListFragment() : Fragment() {
 
         listView?.adapter = adapter
 
-        return view
+        return createdView
     }
 
     override fun onResume() {
         super.onResume()
-
         val call = RetrofitInitializer().authorService().all()
-        call.enqueue(object : Callback<List<Author>> {
-            override fun onFailure(call: Call<List<Author>>?, t: Throwable?) {
-                Log.e("fail", t?.message)
-            }
-
-            override fun onResponse(call: Call<List<Author>>?, response: Response<List<Author>>?) {
-                val authors = response?.body()
-                authors?.let {
-                    AuthorDAO().add(authors)
-                    updateList(authors)
-                }
-            }
-        })
+        call.enqueue(RetrofitCallback().callback2(
+                { response ->
+                    val authors = response?.body()
+                    authors?.let {
+                        AuthorDAO().add(authors)
+                        updateList(authors)
+                    }
+                },
+                { throwable ->
+                    Log.e("fail", throwable?.message)
+                }))
     }
 
     private fun updateList(authors: List<Author>) {

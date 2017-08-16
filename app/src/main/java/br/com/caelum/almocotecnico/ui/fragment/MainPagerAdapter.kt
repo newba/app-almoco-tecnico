@@ -11,7 +11,7 @@ class MainPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     val authorsTitle = "Authors"
     val booksTitle = "Books"
-    val tabTitles = listOf<String>(authorsTitle, booksTitle)
+    val tabTitles = listOf(authorsTitle, booksTitle)
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
@@ -23,15 +23,15 @@ class MainPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         }
     }
 
-    override fun getCount(): Int {
-        return tabTitles.size
-    }
-
     override fun getPageTitle(position: Int): CharSequence {
         return when (position) {
             0 -> authorsTitle
             1 -> booksTitle
             else -> super.getPageTitle(position)
         }
+    }
+
+    override fun getCount(): Int {
+        return tabTitles.size
     }
 }
