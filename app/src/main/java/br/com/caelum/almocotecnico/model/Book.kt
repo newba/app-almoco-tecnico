@@ -1,6 +1,9 @@
 package br.com.caelum.almocotecnico.model;
 
-data class Book(var id: Long = 0,
-                var title: String = "",
+import br.com.caelum.almocotecnico.representation.BookRepresentation
+import com.fasterxml.jackson.annotation.JsonIgnore
+
+data class Book(var title: String = "",
                 var summary: String = "",
-                var authors: List<Author> = arrayListOf())
+                @JsonIgnore var authors: List<Author> = arrayListOf(),
+                @JsonIgnore val representation: BookRepresentation = BookRepresentation(title = title, summary = summary))

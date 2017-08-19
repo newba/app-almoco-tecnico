@@ -13,6 +13,7 @@ import br.com.caelum.almocotecnico.dao.AuthorDAO
 import br.com.caelum.almocotecnico.model.Author
 import br.com.caelum.almocotecnico.retrofit.RetrofitInitializer
 import br.com.caelum.almocotecnico.retrofit.callback.RetrofitCallback
+import br.com.caelum.almocotecnico.retrofit.client.AuthorClient
 import br.com.caelum.almocotecnico.ui.adapter.AuthorListAdapter
 import br.com.caelum.almocotecnico.ui.dialog.AuthorDialog
 
@@ -41,18 +42,10 @@ class AuthorListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val call = RetrofitInitializer().authorService().all()
-        call.enqueue(RetrofitCallback().callback2(
-                { response ->
-                    val authors = response?.body()
-                    authors?.let {
-                        AuthorDAO().add(authors)
-                        updateList(authors)
-                    }
-                },
-                { throwable ->
-                    Log.e("fail", throwable?.message)
-                }))
+        AuthorClient().all({
+            AuthorDAO().add(it)
+            updateList(it)
+        })
     }
 
     private fun configureInsertDialog(container: ViewGroup?) {

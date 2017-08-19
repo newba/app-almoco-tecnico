@@ -1,12 +1,11 @@
 package br.com.caelum.almocotecnico.dao
 
-import android.util.Log
 import br.com.caelum.almocotecnico.model.Author
 
 /**
  * Created by alex on 10/08/17.
  */
-class AuthorDAO() {
+class AuthorDAO {
 
     companion object {
         private val authors: MutableList<Author> = mutableListOf<Author>()

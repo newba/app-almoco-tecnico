@@ -31,7 +31,7 @@ class BookListAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return getItem(position).id
+        return 0
     }
 
     override fun getCount(): Int {

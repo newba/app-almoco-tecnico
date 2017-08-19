@@ -3,15 +3,12 @@ package br.com.caelum.almocotecnico.ui.fragment
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.AdapterView
 import android.widget.ListView
 import br.com.caelum.almocotecnico.R
 import br.com.caelum.almocotecnico.model.Book
-import br.com.caelum.almocotecnico.retrofit.RetrofitInitializer
-import br.com.caelum.almocotecnico.retrofit.callback.RetrofitCallback
+import br.com.caelum.almocotecnico.retrofit.client.BookClient
 import br.com.caelum.almocotecnico.ui.adapter.BookListAdapter
 import br.com.caelum.almocotecnico.ui.dialog.BookDialog
 
@@ -21,53 +18,84 @@ import br.com.caelum.almocotecnico.ui.dialog.BookDialog
 class BooksListFragment : Fragment() {
 
     private val books = mutableListOf<Book>()
-    private val adapter: BookListAdapter by lazy { BookListAdapter(context = context, books = books) }
+    private val bookAdapter: BookListAdapter by lazy { BookListAdapter(context = context, books = books) }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_books_list, container, false)
                 ?: super.onCreateView(inflater, container, savedInstanceState)
-
-        val fab = view?.findViewById<FloatingActionButton>(R.id.books_list_add)
-        fab?.setOnClickListener {
-            configureInsertDialog(container)
-        }
-
-        val listView = view?.findViewById<ListView>(R.id.books_list_listview)
-        listView?.adapter = adapter
-
+        configureFab(view, container)
+        configureListView(view)
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        val call = RetrofitInitializer().bookService().all()
-        call.enqueue(RetrofitCallback().callback { response, throwable ->
-            response?.let {
-                val books = response?.body()
-                books?.let { updateList(books) }
+        BookClient().all {
+            update(it)
+        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        item?.let {
+            val itemId = item.itemId
+            if (itemId == 1) {
+                val book = bookClickedByContextMenu(item)
+                val self = book.representation.activeSelf()
+                BookClient().remove(self, {
+                    remove(book)
+                })
             }
-            throwable?.let { Log.e("fail", throwable?.message) }
-        })
+        }
+        return super.onContextItemSelected(item)
+    }
+
+    private fun bookClickedByContextMenu(item: MenuItem): Book {
+        val menuInfo = item.menuInfo as AdapterView.AdapterContextMenuInfo
+        val itemPosition = menuInfo.position
+        val book = books[itemPosition]
+        return book
+    }
+
+    private fun configureFab(view: View?, container: ViewGroup?) {
+        val fab = view?.findViewById<FloatingActionButton>(R.id.books_list_add)
+        fab?.setOnClickListener {
+            configureInsertDialog(container)
+        }
+    }
+
+    private fun configureListView(view: View?) {
+        val listView = view?.findViewById<ListView>(R.id.books_list_listview)
+        listView?.let {
+            with(it) {
+                adapter = bookAdapter
+                setOnItemClickListener({ _, _, position, _ ->
+                    val book = books[position]
+                })
+                setOnCreateContextMenuListener { contextMenu, view, contextMenuInfo ->
+                    contextMenu.add(Menu.NONE, 1, Menu.NONE, "Remove")
+                }
+            }
+        }
     }
 
     private fun configureInsertDialog(container: ViewGroup?) {
         container?.let {
             BookDialog(context, it).show({
-                val call = RetrofitInitializer().bookService().insert(it)
-                call.enqueue(RetrofitCallback().callback({ response, throwable ->
-                    response?.let {
-                        val book = response?.body()
-                        book?.let { updateList(listOf(book)) }
-                    }
-                    throwable?.let { Log.i("fail", throwable.toString()) }
-                }))
+                BookClient().insert(it, {
+                    update(listOf(it))
+                })
             })
         }
     }
 
-    private fun updateList(book: List<Book>) {
+    private fun update(book: List<Book>) {
         this.books.addAll(book)
-        adapter.notifyDataSetChanged()
+        bookAdapter.notifyDataSetChanged()
+    }
+
+    private fun remove(book: Book) {
+        this.books.remove(book)
+        bookAdapter.notifyDataSetChanged()
     }
 }
 

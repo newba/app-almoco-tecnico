@@ -17,7 +17,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
  */
 class RetrofitInitializer {
 
-    private val endPoint = "http://192.168.65.39:8080/"
+    private val endPoint = "http://192.168.0.42:8080/"
 
     private val retrofit: Retrofit by lazy {
         val objectMapper = configureJackson()
