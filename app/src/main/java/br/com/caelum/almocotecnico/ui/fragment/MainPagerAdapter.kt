@@ -9,9 +9,9 @@ import android.support.v4.app.FragmentPagerAdapter
  */
 class MainPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-    val authorsTitle = "Authors"
-    val booksTitle = "Books"
-    val tabTitles = listOf(authorsTitle, booksTitle)
+    private val authorsTitle = "Authors"
+    private val booksTitle = "Books"
+    private val tabTitles = listOf(authorsTitle, booksTitle)
 
     override fun getItem(position: Int): Fragment {
         return when (position) {

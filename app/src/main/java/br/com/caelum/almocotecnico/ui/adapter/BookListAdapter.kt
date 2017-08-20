@@ -27,7 +27,7 @@ class BookListAdapter(
     }
 
     override fun getItem(position: Int): Book {
-        return books.get(0)
+        return books[0]
     }
 
     override fun getItemId(position: Int): Long {

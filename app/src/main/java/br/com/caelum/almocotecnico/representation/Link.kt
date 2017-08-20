@@ -1,4 +1,4 @@
-package br.com.caelum.almocotecnico.model
+package br.com.caelum.almocotecnico.representation
 
 /**
  * Created by alex on 09/08/17.

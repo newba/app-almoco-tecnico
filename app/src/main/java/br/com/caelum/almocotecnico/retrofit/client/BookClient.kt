@@ -48,12 +48,11 @@ class BookClient {
         }))
     }
 
-    private fun bindBookAndAuthor(bookInserted: Book, author: Author) {
-        val bindBookAndAuthor = bookInserted.representation.self() + author.representation.self()
-        val call = bookService.bindAuthor(bindBookAndAuthor)
+    fun remove(url: String, action: () -> Unit) {
+        val call = bookService.remove(url)
         call.enqueue(RetrofitCallback().callback({ response, throwable ->
             response?.let {
-                Log.i("bind", "success")
+                action()
             }
             throwable?.let {
                 defaultFailMessage(it)
@@ -61,11 +60,12 @@ class BookClient {
         }))
     }
 
-    fun remove(url: String, action: () -> Unit) {
-        val call = bookService.remove(url)
+    private fun bindBookAndAuthor(bookInserted: Book, author: Author) {
+        val bindBookAndAuthor = bookInserted.representation.self() + author.representation.self()
+        val call = bookService.bindAuthor(bindBookAndAuthor)
         call.enqueue(RetrofitCallback().callback({ response, throwable ->
             response?.let {
-                action()
+                Log.i("bind", "success")
             }
             throwable?.let {
                 defaultFailMessage(it)

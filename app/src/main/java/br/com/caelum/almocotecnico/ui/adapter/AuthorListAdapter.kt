@@ -21,7 +21,7 @@ class AuthorListAdapter(
 
     override fun getView(position: Int, view: View?, viewGroup: ViewGroup?): View {
         val view = LayoutInflater.from(context).inflate(R.layout.authors_item, viewGroup, false)
-        val author = authors.get(position)
+        val author = authors[position]
         val bookContent = view.findViewById<TextView>(R.id.authors_item_content)
         bookContent.text = author.name
         return view

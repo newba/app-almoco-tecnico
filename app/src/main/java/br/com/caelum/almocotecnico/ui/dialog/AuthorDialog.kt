@@ -13,8 +13,13 @@ import br.com.caelum.almocotecnico.model.Author
  */
 class AuthorDialog(private val context: Context,
                    private val viewGroup: ViewGroup) {
-    val createdView by lazy { LayoutInflater.from(context).inflate(R.layout.add_author, viewGroup, false) }
-    val fieldName by lazy { createdView.findViewById<EditText>(R.id.add_author_name) }
+
+    private val createdView by lazy {
+        LayoutInflater.from(context).inflate(R.layout.add_author, viewGroup, false)
+    }
+    private val fieldName by lazy {
+        createdView.findViewById<EditText>(R.id.add_author_name)
+    }
 
 
     fun show(action: (Author) -> Unit) {

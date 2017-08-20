@@ -1,8 +1,6 @@
 package br.com.caelum.almocotecnico.representation
 
 import br.com.caelum.almocotecnico.model.Book
-import br.com.caelum.almocotecnico.model.Link
-import br.com.caelum.almocotecnico.model.BookLink
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -14,9 +12,6 @@ data class BookRepresentation(val title: String,
                               val summary: String,
                               var inserted: BookRepresentationInserted = BookRepresentationInserted(),
                               var active: BookRepresentationActive = BookRepresentationActive()) {
-
-    val book by lazy { Book(title = title, summary = summary) }
-
     fun authors(): String {
         return try {
             active.links.first { it.rel.equals("authors") }.href

@@ -19,7 +19,6 @@ class AuthorClient {
                         it.forEach { it.author.representation.active = it }
                         val authors = it.map { it.author }
                         authors?.let {
-                            Log.i("authors", authors.toString())
                             action(authors)
                         }
                     }

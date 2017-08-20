@@ -1,8 +1,6 @@
 package br.com.caelum.almocotecnico.representation
 
 import br.com.caelum.almocotecnico.model.Author
-import br.com.caelum.almocotecnico.model.AuthorLink
-import br.com.caelum.almocotecnico.model.Link
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**

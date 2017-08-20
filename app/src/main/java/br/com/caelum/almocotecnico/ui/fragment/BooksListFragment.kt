@@ -71,10 +71,7 @@ class BooksListFragment : Fragment() {
         listView?.let {
             with(it) {
                 adapter = bookAdapter
-                setOnItemClickListener({ _, _, position, _ ->
-                    val book = books[position]
-                })
-                setOnCreateContextMenuListener { contextMenu, view, contextMenuInfo ->
+                setOnCreateContextMenuListener { contextMenu, _, _ ->
                     contextMenu.add(Menu.NONE, 1, Menu.NONE, "Remove")
                 }
             }
