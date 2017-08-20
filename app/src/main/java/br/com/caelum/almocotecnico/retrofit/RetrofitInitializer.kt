@@ -1,6 +1,5 @@
 package br.com.caelum.almocotecnico.retrofit
 
-import br.com.caelum.almocotecnico.model.Author
 import br.com.caelum.almocotecnico.retrofit.service.AuthorService
 import br.com.caelum.almocotecnico.retrofit.service.BookService
 import com.fasterxml.jackson.databind.DeserializationFeature

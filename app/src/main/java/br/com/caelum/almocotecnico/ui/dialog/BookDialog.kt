@@ -3,6 +3,7 @@ package br.com.caelum.almocotecnico.ui.dialog
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -36,8 +37,10 @@ class BookDialog(private val context: Context,
                     val title = titleField.text.toString()
                     val summary = summaryField.text.toString()
                     val author = authors.get(authorField.selectedItemPosition)
+                    Log.i("author selected", author.toString())
 
                     val book = Book(title = title, summary = summary, authors = listOf(author))
+
                     action(book)
                 })
                 .show()
@@ -45,6 +48,7 @@ class BookDialog(private val context: Context,
 
     private fun configureSpinner(): List<Author> {
         val authors = AuthorDAO().all()
+        Log.i("author dao", authors.toString())
         val arrayBooks = authors.map { it.name }
         val adapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, arrayBooks)
         val spinner = createdView.findViewById<Spinner>(R.id.add_book_author_spinner)

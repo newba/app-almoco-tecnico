@@ -1,8 +1,8 @@
 package br.com.caelum.almocotecnico.retrofit.service
 
 import br.com.caelum.almocotecnico.model.Book
-    import br.com.caelum.almocotecnico.representation.BookRepresentationActive
-    import br.com.caelum.almocotecnico.representation.BookRepresentationInserted
+import br.com.caelum.almocotecnico.representation.BookRepresentationActive
+import br.com.caelum.almocotecnico.representation.BookRepresentationInserted
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -18,4 +18,7 @@ interface BookService {
 
     @DELETE
     fun remove(@Url url: String): Call<Void>
+
+    @PATCH
+    fun bindAuthor(@Url url: String): Call<Void>
 }

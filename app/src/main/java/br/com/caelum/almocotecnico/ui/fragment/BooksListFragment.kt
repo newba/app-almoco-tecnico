@@ -3,6 +3,7 @@ package br.com.caelum.almocotecnico.ui.fragment
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ListView
@@ -40,10 +41,12 @@ class BooksListFragment : Fragment() {
             val itemId = item.itemId
             if (itemId == 1) {
                 val book = bookClickedByContextMenu(item)
-                val self = book.representation.activeSelf()
-                BookClient().remove(self, {
-                    remove(book)
-                })
+                val self = book.representation.self()
+                if (self.isNotEmpty()) {
+                    BookClient().remove(self, {
+                        remove(book)
+                    })
+                }
             }
         }
         return super.onContextItemSelected(item)

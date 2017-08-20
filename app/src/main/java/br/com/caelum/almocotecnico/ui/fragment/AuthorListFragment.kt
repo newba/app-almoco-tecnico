@@ -3,7 +3,6 @@ package br.com.caelum.almocotecnico.ui.fragment
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,6 @@ import android.widget.ListView
 import br.com.caelum.almocotecnico.R
 import br.com.caelum.almocotecnico.dao.AuthorDAO
 import br.com.caelum.almocotecnico.model.Author
-import br.com.caelum.almocotecnico.retrofit.RetrofitInitializer
-import br.com.caelum.almocotecnico.retrofit.callback.RetrofitCallback
 import br.com.caelum.almocotecnico.retrofit.client.AuthorClient
 import br.com.caelum.almocotecnico.ui.adapter.AuthorListAdapter
 import br.com.caelum.almocotecnico.ui.dialog.AuthorDialog
@@ -51,16 +48,9 @@ class AuthorListFragment : Fragment() {
     private fun configureInsertDialog(container: ViewGroup?) {
         container?.let {
             AuthorDialog(context = context, viewGroup = it).show({
-                val call = RetrofitInitializer().authorService().insert(it)
-                call.enqueue(RetrofitCallback().callback { response, throwable ->
-                    val author = response?.body()
-                    author?.let {
-                        AuthorDAO().add(author)
-                        updateList(listOf(author))
-                    }
-                    throwable?.let {
-                        Log.e("fail", throwable.message)
-                    }
+                AuthorClient().insert(it, {
+                    AuthorDAO().add(it)
+                    updateList(listOf(it))
                 })
             })
         }

@@ -1,6 +1,7 @@
 package br.com.caelum.almocotecnico.retrofit.client
 
 import android.util.Log
+import br.com.caelum.almocotecnico.model.Author
 import br.com.caelum.almocotecnico.model.Book
 import br.com.caelum.almocotecnico.retrofit.RetrofitInitializer
 import br.com.caelum.almocotecnico.retrofit.callback.RetrofitCallback
@@ -34,8 +35,25 @@ class BookClient {
                 val representation = response?.body()
                 representation?.let {
                     it.book.representation.inserted = it
+                    val bookInserted = it.book
+                    bookInserted?.let { action(it) }
+                    val author = book.authors.first()
+
+                    bindBookAndAuthor(bookInserted, author)
                 }
-                book?.let { action(book) }
+            }
+            throwable?.let {
+                defaultFailMessage(it)
+            }
+        }))
+    }
+
+    private fun bindBookAndAuthor(bookInserted: Book, author: Author) {
+        val bindBookAndAuthor = bookInserted.representation.self() + author.representation.self()
+        val call = bookService.bindAuthor(bindBookAndAuthor)
+        call.enqueue(RetrofitCallback().callback({ response, throwable ->
+            response?.let {
+                Log.i("bind", "success")
             }
             throwable?.let {
                 defaultFailMessage(it)

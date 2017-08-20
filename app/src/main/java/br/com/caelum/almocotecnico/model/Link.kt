@@ -6,5 +6,7 @@ package br.com.caelum.almocotecnico.model
 data class Link(var rel: String = "",
                 var href: String = "")
 
-data class ReturnLink(var self: Link = Link(),
-                      var authors: Link = Link())
+data class BookLink(val self: Link = Link(),
+                    val authors: Link = Link())
+
+data class AuthorLink(val self: Link = Link())

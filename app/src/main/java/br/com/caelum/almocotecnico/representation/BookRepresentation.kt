@@ -2,7 +2,7 @@ package br.com.caelum.almocotecnico.representation
 
 import br.com.caelum.almocotecnico.model.Book
 import br.com.caelum.almocotecnico.model.Link
-import br.com.caelum.almocotecnico.model.ReturnLink
+import br.com.caelum.almocotecnico.model.BookLink
 import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
@@ -17,27 +17,28 @@ data class BookRepresentation(val title: String,
 
     val book by lazy { Book(title = title, summary = summary) }
 
-    fun insertedSelf(): String {
-        return inserted.links.self.href
+    fun authors(): String {
+        return try {
+            active.links.first { it.rel.equals("authors") }.href
+        } catch (e: NoSuchElementException) {
+            inserted.links.authors.href
+        }
     }
 
-    fun insertedAuthors(): String {
-        return inserted.links.authors.href
+    fun self(): String {
+        return try {
+            active.links.first { it.rel.equals("self") }.href
+        } catch (e: NoSuchElementException) {
+            inserted.links.self.href
+        }
     }
 
-    fun activeSelf(): String {
-        return active.links.first { it.rel.equals("self") }.href
-    }
-
-    fun activeAuthors(): String {
-        return active.links.first { it.rel.equals("authors") }.href
-    }
 }
 
 data class BookRepresentationInserted(val title: String = "",
                                       val summary: String = "",
                                       @JsonProperty("_links")
-                                      val links: ReturnLink = ReturnLink()) {
+                                      val links: BookLink = BookLink()) {
     val book by lazy { Book(title = title, summary = summary) }
 }
 
