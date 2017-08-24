@@ -10,8 +10,10 @@ import br.com.caelum.almocotecnico.retrofit.callback.RetrofitCallback
  */
 class AuthorClient {
 
+    private val authorService = RetrofitInitializer().authorService()
+
     fun all(action: (authors: List<Author>) -> Unit) {
-        val call = RetrofitInitializer().authorService().all()
+        val call = authorService.all()
         call.enqueue(RetrofitCallback().callback2(
                 { response ->
                     val representation = response?.body()
@@ -29,7 +31,7 @@ class AuthorClient {
     }
 
     fun insert(author: Author, action: (author: Author) -> Unit) {
-        val call = RetrofitInitializer().authorService().insert(author)
+        val call = authorService.insert(author)
         call.enqueue(RetrofitCallback().callback { response, throwable ->
             val representation = response?.body()
             representation?.let {
@@ -41,5 +43,19 @@ class AuthorClient {
                 Log.e("fail", throwable.message)
             }
         })
+    }
+
+    fun remove(self: String, action: () -> Unit) {
+        val call = authorService.remove(self)
+        call.enqueue(RetrofitCallback().callback({ response, throwable ->
+            response?.let {
+                if (it.isSuccessful) {
+                    action()
+                }
+            }
+            throwable?.let {
+                Log.e("fail", throwable.message)
+            }
+        }))
     }
 }

@@ -3,9 +3,9 @@ package br.com.caelum.almocotecnico.ui.fragment
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
+import android.widget.AdapterView
 import android.widget.ListView
 import br.com.caelum.almocotecnico.R
 import br.com.caelum.almocotecnico.dao.AuthorDAO
@@ -20,7 +20,7 @@ import br.com.caelum.almocotecnico.ui.dialog.AuthorDialog
 class AuthorListFragment : Fragment() {
 
     private val authors = mutableListOf<Author>()
-    private val adapter by lazy { AuthorListAdapter(context = context, authors = authors) }
+    private val authorAdapter by lazy { AuthorListAdapter(context = context, authors = authors) }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val createdView = inflater?.inflate(R.layout.fragment_authors_list, container, false)
@@ -31,16 +31,56 @@ class AuthorListFragment : Fragment() {
             configureInsertDialog(container)
         }
 
-        val listView = createdView?.findViewById<ListView>(R.id.authors_list_listview)
-        listView?.adapter = adapter
+        configureListView(createdView)
 
         return createdView
     }
 
+    private fun configureListView(createdView: View?) {
+        val listView = createdView?.findViewById<ListView>(R.id.authors_list_listview)
+        listView?.let {
+            with(it) {
+                adapter = authorAdapter
+                setOnCreateContextMenuListener { contextMenu, _, _ ->
+                    contextMenu.add(Menu.NONE, 1, Menu.NONE, "Remove")
+                }
+            }
+        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        item?.let {
+            val itemId = it.itemId
+            when (itemId) {
+                1 -> {
+                    Log.i("chega", "authorfrag")
+                    val author = authorClickedByContextMenu(it)
+                    val self = author.representation.self()
+                    AuthorClient().remove(self, {
+                        remove(author)
+                    })
+                }
+            }
+        }
+        return super.onContextItemSelected(item)
+    }
+
+    private fun remove(author: Author) {
+        AuthorDAO().remove(author)
+        authors.remove(author)
+        updateList()
+    }
+
+    private fun authorClickedByContextMenu(item: MenuItem): Author {
+        val menuInfo = item.menuInfo as AdapterView.AdapterContextMenuInfo
+        val itemPosition = menuInfo.position
+        return authors[itemPosition]
+    }
+
+
     override fun onResume() {
         super.onResume()
         AuthorClient().all({
-            AuthorDAO().add(it)
             updateList(it)
         })
     }
@@ -49,7 +89,6 @@ class AuthorListFragment : Fragment() {
         container?.let {
             AuthorDialog(context = context, viewGroup = it).show({
                 AuthorClient().insert(it, {
-                    AuthorDAO().add(it)
                     updateList(listOf(it))
                 })
             })
@@ -57,7 +96,12 @@ class AuthorListFragment : Fragment() {
     }
 
     private fun updateList(authors: List<Author>) {
+        AuthorDAO().add(authors)
         this.authors.addAll(authors)
-        adapter.notifyDataSetChanged()
+        updateList()
+    }
+
+    private fun updateList() {
+        authorAdapter.notifyDataSetChanged()
     }
 }

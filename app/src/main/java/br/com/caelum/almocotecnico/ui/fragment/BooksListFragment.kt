@@ -38,9 +38,10 @@ class BooksListFragment : Fragment() {
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         item?.let {
-            val itemId = item.itemId
-            if (itemId == 1) {
-                val book = bookClickedByContextMenu(item)
+            val itemId = it.itemId
+            if (itemId == 2) {
+                Log.i("chega", "bookfrag")
+                val book = bookClickedByContextMenu(it)
                 val self = book.representation.self()
                 if (self.isNotEmpty()) {
                     BookClient().remove(self, {
@@ -55,8 +56,7 @@ class BooksListFragment : Fragment() {
     private fun bookClickedByContextMenu(item: MenuItem): Book {
         val menuInfo = item.menuInfo as AdapterView.AdapterContextMenuInfo
         val itemPosition = menuInfo.position
-        val book = books[itemPosition]
-        return book
+        return books[itemPosition]
     }
 
     private fun configureFab(view: View?, container: ViewGroup?) {
@@ -72,7 +72,7 @@ class BooksListFragment : Fragment() {
             with(it) {
                 adapter = bookAdapter
                 setOnCreateContextMenuListener { contextMenu, _, _ ->
-                    contextMenu.add(Menu.NONE, 1, Menu.NONE, "Remove")
+                    contextMenu.add(Menu.NONE, 2, Menu.NONE, "Remove")
                 }
             }
         }

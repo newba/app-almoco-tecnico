@@ -15,7 +15,8 @@
             android:id="@+id/add_book_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/title" />
+            android:hint="@string/title"
+            android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -26,7 +27,7 @@
         android:layout_marginRight="10dp">
 
         <EditText
-            android:id="@+id/add_book_summary"
+            android:id="@+id/form_book_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/summary" />

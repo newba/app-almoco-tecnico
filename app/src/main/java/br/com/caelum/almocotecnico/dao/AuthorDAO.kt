@@ -11,15 +11,15 @@ class AuthorDAO {
         private val authors: MutableList<Author> = mutableListOf<Author>()
     }
 
-    fun add(author: Author) {
-        authors.add(author)
-    }
-
     fun all(): List<Author> {
         return authors.toList()
     }
 
     fun add(authors: List<Author>) {
         AuthorDAO.Companion.authors.addAll(authors)
+    }
+
+    fun remove(author: Author) {
+        authors.remove(author)
     }
 }

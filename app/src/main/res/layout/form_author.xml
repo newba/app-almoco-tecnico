@@ -10,10 +10,11 @@
         android:layout_margin="10dp">
 
         <EditText
-            android:id="@+id/add_author_name"
+            android:id="@+id/form_author_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/name" />
+            android:hint="@string/name"
+            android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>
 

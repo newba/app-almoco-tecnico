@@ -3,7 +3,6 @@ package br.com.caelum.almocotecnico.ui.dialog
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -21,7 +20,7 @@ class BookDialog(private val context: Context,
                  private val viewGroup: ViewGroup) {
 
     private val createdView by lazy {
-        LayoutInflater.from(context).inflate(R.layout.add_book, viewGroup, false)
+        LayoutInflater.from(context).inflate(R.layout.form_book, viewGroup, false)
     }
 
 
@@ -34,7 +33,7 @@ class BookDialog(private val context: Context,
                 .setView(createdView)
                 .setPositiveButton("Send", { _: DialogInterface, _: Int ->
                     val titleField = createdView.findViewById<EditText>(R.id.add_book_title)
-                    val summaryField = createdView.findViewById<EditText>(R.id.add_book_summary)
+                    val summaryField = createdView.findViewById<EditText>(R.id.form_book_summary)
                     val authorField = createdView.findViewById<Spinner>(R.id.add_book_author_spinner)
 
                     val title = titleField.text.toString()

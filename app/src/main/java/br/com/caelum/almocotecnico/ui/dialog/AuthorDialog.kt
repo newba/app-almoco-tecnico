@@ -15,10 +15,10 @@ class AuthorDialog(private val context: Context,
                    private val viewGroup: ViewGroup) {
 
     private val createdView by lazy {
-        LayoutInflater.from(context).inflate(R.layout.add_author, viewGroup, false)
+        LayoutInflater.from(context).inflate(R.layout.form_author, viewGroup, false)
     }
     private val fieldName by lazy {
-        createdView.findViewById<EditText>(R.id.add_author_name)
+        createdView.findViewById<EditText>(R.id.form_author_name)
     }
 
 

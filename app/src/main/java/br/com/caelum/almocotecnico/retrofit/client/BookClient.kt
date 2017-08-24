@@ -52,7 +52,9 @@ class BookClient {
         val call = bookService.remove(url)
         call.enqueue(RetrofitCallback().callback({ response, throwable ->
             response?.let {
-                action()
+                if (it.isSuccessful) {
+                    action()
+                }
             }
             throwable?.let {
                 defaultFailMessage(it)
@@ -65,7 +67,9 @@ class BookClient {
         val call = bookService.bindAuthor(bindBookAndAuthor)
         call.enqueue(RetrofitCallback().callback({ response, throwable ->
             response?.let {
-                Log.i("bind", "success")
+                if (it.isSuccessful) {
+                    Log.i("bind", "success")
+                }
             }
             throwable?.let {
                 defaultFailMessage(it)

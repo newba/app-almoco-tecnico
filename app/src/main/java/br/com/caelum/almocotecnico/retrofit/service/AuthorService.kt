@@ -5,10 +5,7 @@ import br.com.caelum.almocotecnico.representation.AuthorRepresentationActive
 import br.com.caelum.almocotecnico.representation.AuthorRepresentationInserted
 import br.com.caelum.almocotecnico.representation.BookRepresentationActive
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 /**
  * Created by alex on 07/08/17.
@@ -19,4 +16,7 @@ interface AuthorService {
 
     @POST("authors")
     fun insert(@Body author: Author): Call<AuthorRepresentationInserted>
+
+    @DELETE
+    fun remove(@Url url: String): Call<Void>
 }
