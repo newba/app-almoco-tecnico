@@ -3,7 +3,6 @@ package br.com.caelum.almocotecnico.retrofit.service
 import br.com.caelum.almocotecnico.model.Author
 import br.com.caelum.almocotecnico.representation.AuthorRepresentationActive
 import br.com.caelum.almocotecnico.representation.AuthorRepresentationInserted
-import br.com.caelum.almocotecnico.representation.BookRepresentationActive
 import retrofit2.Call
 import retrofit2.http.*
 

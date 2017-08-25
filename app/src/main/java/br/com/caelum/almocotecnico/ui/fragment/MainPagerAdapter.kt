@@ -14,9 +14,9 @@ class MainPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     private val tabTitles = listOf(authorsTitle, booksTitle)
 
     override fun getItem(position: Int): Fragment {
-        return when (position) {
-            0 -> AuthorListFragment()
-            1 -> BooksListFragment()
+        return when {
+            position == 0 -> AuthorListFragment()
+            position == 1 -> BooksListFragment()
             else -> {
                 throw IllegalArgumentException("Id não existente")
             }

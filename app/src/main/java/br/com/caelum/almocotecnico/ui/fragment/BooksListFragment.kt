@@ -1,9 +1,7 @@
 package br.com.caelum.almocotecnico.ui.fragment
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import android.widget.ListView
@@ -12,6 +10,7 @@ import br.com.caelum.almocotecnico.model.Book
 import br.com.caelum.almocotecnico.retrofit.client.BookClient
 import br.com.caelum.almocotecnico.ui.adapter.BookListAdapter
 import br.com.caelum.almocotecnico.ui.dialog.BookDialog
+import kotlinx.android.synthetic.main.fragment_books_list.view.*
 
 /**
  * Created by alex on 08/08/17.
@@ -22,11 +21,14 @@ class BooksListFragment : Fragment() {
     private val bookAdapter: BookListAdapter by lazy { BookListAdapter(context = context, books = books) }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_books_list, container, false)
-                ?: super.onCreateView(inflater, container, savedInstanceState)
-        configureFab(view, container)
-        configureListView(view)
-        return view
+        val createdView = inflater?.inflate(R.layout.fragment_books_list, container, false)
+        createdView?.let { view ->
+            container?.let { viewGroup ->
+                configureFab(view, viewGroup)
+            }
+            configureListView(view)
+        }
+        return createdView
     }
 
     override fun onResume() {
@@ -40,7 +42,6 @@ class BooksListFragment : Fragment() {
         item?.let {
             val itemId = it.itemId
             if (itemId == 2) {
-                Log.i("chega", "bookfrag")
                 val book = bookClickedByContextMenu(it)
                 val self = book.representation.self()
                 if (self.isNotEmpty()) {
@@ -59,17 +60,17 @@ class BooksListFragment : Fragment() {
         return books[itemPosition]
     }
 
-    private fun configureFab(view: View?, container: ViewGroup?) {
-        val fab = view?.findViewById<FloatingActionButton>(R.id.books_list_add)
-        fab?.setOnClickListener {
+    private fun configureFab(view: View, container: ViewGroup) {
+        val fab = view.books_list_add
+        fab.setOnClickListener {
             configureInsertDialog(container)
         }
     }
 
     private fun configureListView(view: View?) {
         val listView = view?.findViewById<ListView>(R.id.books_list_listview)
-        listView?.let {
-            with(it) {
+        listView?.let { lv ->
+            with(lv) {
                 adapter = bookAdapter
                 setOnCreateContextMenuListener { contextMenu, _, _ ->
                     contextMenu.add(Menu.NONE, 2, Menu.NONE, "Remove")
@@ -78,14 +79,13 @@ class BooksListFragment : Fragment() {
         }
     }
 
-    private fun configureInsertDialog(container: ViewGroup?) {
-        container?.let {
-            BookDialog(context, it).show({
-                BookClient().insert(it, {
-                    update(listOf(it))
+    private fun configureInsertDialog(viewGroup: ViewGroup) {
+        BookDialog(context, viewGroup)
+            .show({ returnedBook ->
+                BookClient().insert(returnedBook, { savedBook ->
+                    update(listOf(savedBook))
                 })
             })
-        }
     }
 
     private fun update(book: List<Book>) {

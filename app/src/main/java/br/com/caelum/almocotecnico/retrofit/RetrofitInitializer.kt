@@ -20,7 +20,7 @@ class RetrofitInitializer {
 
     private val retrofit: Retrofit by lazy {
         val objectMapper = configureJackson()
-        var client = configureOkHttpClient()
+        val client = configureOkHttpClient()
         Retrofit.Builder()
                 .baseUrl(endPoint)
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
@@ -38,19 +38,18 @@ class RetrofitInitializer {
 
     private fun configureOkHttpClient(): OkHttpClient? {
         val interceptor = configureLoggingInterceptor()
-        var client = OkHttpClient.Builder()
+        return OkHttpClient.Builder()
                 .addInterceptor(interceptor).build()
-        return client
     }
 
     private fun configureLoggingInterceptor(): HttpLoggingInterceptor {
-        var interceptor = HttpLoggingInterceptor()
+        val interceptor = HttpLoggingInterceptor()
         interceptor.level = BODY
         return interceptor
     }
 
     private fun configureJackson(): ObjectMapper {
-        var objectMapper = ObjectMapper()
+        val objectMapper = ObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         objectMapper.registerKotlinModule()
         return objectMapper

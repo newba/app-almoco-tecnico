@@ -14,7 +14,7 @@ data class BookRepresentation(val title: String,
                               var active: BookRepresentationActive = BookRepresentationActive()) {
     fun authors(): String {
         return try {
-            active.links.first { it.rel.equals("authors") }.href
+            active.links.first { it.rel == "authors" }.href
         } catch (e: NoSuchElementException) {
             inserted.links.authors.href
         }
@@ -22,7 +22,7 @@ data class BookRepresentation(val title: String,
 
     fun self(): String {
         return try {
-            active.links.first { it.rel.equals("self") }.href
+            active.links.first { it.rel == "self" }.href
         } catch (e: NoSuchElementException) {
             inserted.links.self.href
         }
@@ -30,16 +30,16 @@ data class BookRepresentation(val title: String,
 
 }
 
-data class BookRepresentationInserted(val title: String = "",
-                                      val summary: String = "",
+data class BookRepresentationInserted(private val title: String = "",
+                                      private val summary: String = "",
                                       @JsonProperty("_links")
                                       val links: BookLink = BookLink()) {
     val book by lazy { Book(title = title, summary = summary) }
 }
 
 
-data class BookRepresentationActive(val title: String = "",
-                                    val summary: String = "",
+data class BookRepresentationActive(private val title: String = "",
+                                    private val summary: String = "",
                                     val links: List<Link> = listOf()) {
 
     val book by lazy { Book(title = title, summary = summary) }

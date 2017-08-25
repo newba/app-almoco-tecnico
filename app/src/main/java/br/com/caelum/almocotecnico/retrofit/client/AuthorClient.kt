@@ -2,6 +2,8 @@ package br.com.caelum.almocotecnico.retrofit.client
 
 import android.util.Log
 import br.com.caelum.almocotecnico.model.Author
+import br.com.caelum.almocotecnico.representation.AuthorRepresentationActive
+import br.com.caelum.almocotecnico.representation.AuthorRepresentationInserted
 import br.com.caelum.almocotecnico.retrofit.RetrofitInitializer
 import br.com.caelum.almocotecnico.retrofit.callback.RetrofitCallback
 
@@ -17,12 +19,9 @@ class AuthorClient {
         call.enqueue(RetrofitCallback().callback2(
                 { response ->
                     val representation = response?.body()
-                    representation?.let {
-                        it.forEach { it.author.representation.active = it }
-                        val authors = it.map { it.author }
-                        authors?.let {
-                            action(authors)
-                        }
+                    representation?.let { it ->
+                        val authors = activeAuthors(it)
+                        action(authors)
                     }
                 },
                 { throwable ->
@@ -35,9 +34,8 @@ class AuthorClient {
         call.enqueue(RetrofitCallback().callback { response, throwable ->
             val representation = response?.body()
             representation?.let {
-                it.author.representation.inserted = it
-                val insertedAuthor = it.author
-                action(insertedAuthor)
+                val author = insertedAuthor(it)
+                action(author)
             }
             throwable?.let {
                 Log.e("fail", throwable.message)
@@ -57,5 +55,15 @@ class AuthorClient {
                 Log.e("fail", throwable.message)
             }
         }))
+    }
+
+    private fun insertedAuthor(representation: AuthorRepresentationInserted): Author {
+        representation.author.representation.inserted = representation
+        return representation.author
+    }
+
+    private fun activeAuthors(representations: List<AuthorRepresentationActive>): List<Author> {
+        representations.forEach { it.author.representation.active = it }
+        return representations.map { it.author }
     }
 }

@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
 import br.com.caelum.almocotecnico.R
 import br.com.caelum.almocotecnico.model.Book
+import kotlinx.android.synthetic.main.book_item.view.*
 
 
 /**
@@ -19,11 +19,10 @@ class BookListAdapter(
 
 
     override fun getView(position: Int, view: View?, viewGroup: ViewGroup?): View {
-        val view = LayoutInflater.from(context).inflate(R.layout.book_item, viewGroup, false)
-        val book = books.get(position)
-        val bookContent = view.findViewById<TextView>(R.id.book_item_content)
-        bookContent.text = book.title
-        return view
+        val createView = LayoutInflater.from(context).inflate(R.layout.book_item, viewGroup, false)
+        val book = books[position]
+        createView.book_item_content.text = book.title
+        return createView
     }
 
     override fun getItem(position: Int): Book {

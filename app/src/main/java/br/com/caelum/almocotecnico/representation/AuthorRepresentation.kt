@@ -15,7 +15,7 @@ data class AuthorRepresentation(val name: String = "",
 
     fun self(): String {
         return try {
-            active.links.first { it.rel.equals("self") }.href
+            active.links.first { it.rel == "self" }.href
         } catch (e: NoSuchElementException) {
             inserted.links.self.href
         }
